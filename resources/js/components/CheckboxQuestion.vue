@@ -1,5 +1,5 @@
 <template>
-    <question :question="question">
+    <question :question="question.translation.en.question">
         <fieldset>
             <div v-for="(answer, index) in question.answers" :key="index">
                 <input

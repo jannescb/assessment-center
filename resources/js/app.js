@@ -21,6 +21,17 @@ window.Vue = require('vue').default;
 
 Vue.component('survey', require('./components/Survey.vue').default);
 
+var mixin = {
+    created: function () {
+        console.log('foo');
+    },
+    methods: {
+        getTranslation(obj, key) {
+            return obj[translation.en][key];
+        },
+    },
+};
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -28,5 +39,6 @@ Vue.component('survey', require('./components/Survey.vue').default);
  */
 
 const app = new Vue({
+    mixins: [mixin],
     el: '#app',
 });

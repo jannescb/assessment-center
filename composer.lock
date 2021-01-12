@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d012771a93beca3c5a9739ef5f8668d",
+    "content-hash": "dbc1ed1c145feb306deed1a14f1df570",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2269,16 +2269,16 @@
         },
         {
             "name": "litstack/litstack",
-            "version": "v3.2.5",
+            "version": "3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/litstack/litstack.git",
-                "reference": "902ce9a561060e4bc0a87b2e64556f0f5f8f727e"
+                "reference": "c576a9152e169d9c5770b3b40a952c1b5553dc6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/litstack/litstack/zipball/902ce9a561060e4bc0a87b2e64556f0f5f8f727e",
-                "reference": "902ce9a561060e4bc0a87b2e64556f0f5f8f727e",
+                "url": "https://api.github.com/repos/litstack/litstack/zipball/c576a9152e169d9c5770b3b40a952c1b5553dc6c",
+                "reference": "c576a9152e169d9c5770b3b40a952c1b5553dc6c",
                 "shasum": ""
             },
             "require": {
@@ -2301,6 +2301,7 @@
                 "orchestra/testbench-dusk": "^5.2|^6.0",
                 "phpunit/phpunit": "^8.0|^9.0"
             },
+            "default-branch": true,
             "type": "project",
             "extra": {
                 "laravel": {
@@ -2338,9 +2339,9 @@
             "description": "Laravel Content-Administration",
             "support": {
                 "issues": "https://github.com/litstack/litstack/issues",
-                "source": "https://github.com/litstack/litstack/tree/v3.2.5"
+                "source": "https://github.com/litstack/litstack/tree/3.x"
             },
-            "time": "2020-12-18T11:46:59+00:00"
+            "time": "2021-01-11T18:43:24+00:00"
         },
         {
             "name": "livewire/livewire",
@@ -9177,7 +9178,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "litstack/litstack": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

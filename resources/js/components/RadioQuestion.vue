@@ -1,9 +1,16 @@
 <template>
-    <question :question="question">
+    <question :question="question.translation.en.question">
         <fieldset>
             <div v-for="(answer, index) in question.answers" :key="index">
-                <input type="radio" :id="index" name="answer" :value="answer" />
-                <label :for="index">{{ answer.translation.en.answer }}</label>
+                <input
+                    type="radio"
+                    :id="`${index}-${getQuestion}`"
+                    :name="getQuestion"
+                    :value="answer.translation.de.answer"
+                />
+                <label :for="`${index}-${getQuestion}`">{{
+                    answer.translation.en.answer
+                }}</label>
             </div>
         </fieldset>
     </question>
@@ -21,6 +28,11 @@ export default {
     },
     components: {
         Question
+    },
+    computed: {
+        getQuestion() {
+            return this.question.translation.en.question;
+        }
     }
 };
 </script>

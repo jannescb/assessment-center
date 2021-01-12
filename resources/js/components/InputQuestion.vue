@@ -1,5 +1,5 @@
 <template>
-    <question :question="question">
+    <question :question="question.translation.en.question">
         <input type="text" />
     </question>
 </template>

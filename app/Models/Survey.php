@@ -42,4 +42,8 @@ class Survey extends Model implements TranslatableContract
     {
         return $this->repeatables('questions');
     }
+    public function pages()
+    {
+        return $this->repeatables('pages');
+    }
 }

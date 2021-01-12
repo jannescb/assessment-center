@@ -1934,7 +1934,7 @@ __webpack_require__.r(__webpack_exports__);
   name: 'Question',
   props: {
     question: {
-      type: Object,
+      type: String,
       required: true
     }
   }
@@ -1965,6 +1965,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'RadioQuestion',
@@ -1976,6 +1983,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   components: {
     Question: _Question__WEBPACK_IMPORTED_MODULE_0__.default
+  },
+  computed: {
+    getQuestion: function getQuestion() {
+      return this.question.translation.en.question;
+    }
   }
 });
 
@@ -2062,6 +2074,16 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js"
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('survey', __webpack_require__(/*! ./components/Survey.vue */ "./resources/js/components/Survey.vue").default);
+var mixin = {
+  created: function created() {
+    console.log('foo');
+  },
+  methods: {
+    getTranslation: function getTranslation(obj, key) {
+      return obj[translation.en][key];
+    }
+  }
+};
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -2069,6 +2091,7 @@ Vue.component('survey', __webpack_require__(/*! ./components/Survey.vue */ "./re
  */
 
 var app = new Vue({
+  mixins: [mixin],
   el: '#app'
 });
 
@@ -37805,24 +37828,28 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("question", { attrs: { question: _vm.question } }, [
-    _c(
-      "fieldset",
-      _vm._l(_vm.question.answers, function(answer, index) {
-        return _c("div", { key: index }, [
-          _c("input", {
-            attrs: { type: "checkbox", id: index, name: "answer" },
-            domProps: { value: answer }
-          }),
-          _vm._v(" "),
-          _c("label", { attrs: { for: index } }, [
-            _vm._v(_vm._s(answer.translation.en.answer))
+  return _c(
+    "question",
+    { attrs: { question: _vm.question.translation.en.question } },
+    [
+      _c(
+        "fieldset",
+        _vm._l(_vm.question.answers, function(answer, index) {
+          return _c("div", { key: index }, [
+            _c("input", {
+              attrs: { type: "checkbox", id: index, name: "answer" },
+              domProps: { value: answer }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: index } }, [
+              _vm._v(_vm._s(answer.translation.en.answer))
+            ])
           ])
-        ])
-      }),
-      0
-    )
-  ])
+        }),
+        0
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -37847,9 +37874,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("question", { attrs: { question: _vm.question } }, [
-    _c("input", { attrs: { type: "text" } })
-  ])
+  return _c(
+    "question",
+    { attrs: { question: _vm.question.translation.en.question } },
+    [_c("input", { attrs: { type: "text" } })]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -37876,12 +37905,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    [
-      _vm._v(
-        "\n    " + _vm._s(_vm.question.translation.en.question) + "\n    "
-      ),
-      _vm._t("default")
-    ],
+    [_vm._v("\n    " + _vm._s(_vm.question) + "\n    "), _vm._t("default")],
     2
   )
 }
@@ -37908,24 +37932,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("question", { attrs: { question: _vm.question } }, [
-    _c(
-      "fieldset",
-      _vm._l(_vm.question.answers, function(answer, index) {
-        return _c("div", { key: index }, [
-          _c("input", {
-            attrs: { type: "radio", id: index, name: "answer" },
-            domProps: { value: answer }
-          }),
-          _vm._v(" "),
-          _c("label", { attrs: { for: index } }, [
-            _vm._v(_vm._s(answer.translation.en.answer))
+  return _c(
+    "question",
+    { attrs: { question: _vm.question.translation.en.question } },
+    [
+      _c(
+        "fieldset",
+        _vm._l(_vm.question.answers, function(answer, index) {
+          return _c("div", { key: index }, [
+            _c("input", {
+              attrs: {
+                type: "radio",
+                id: index + "-" + _vm.getQuestion,
+                name: _vm.getQuestion
+              },
+              domProps: { value: answer.translation.de.answer }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: index + "-" + _vm.getQuestion } }, [
+              _vm._v(_vm._s(answer.translation.en.answer))
+            ])
           ])
-        ])
-      }),
-      0
-    )
-  ])
+        }),
+        0
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{ question.translation.en.question }}
+        {{ question }}
         <slot />
     </div>
 </template>
@@ -10,7 +10,7 @@ export default {
     name: 'Question',
     props: {
         question: {
-            type: Object,
+            type: String,
             required: true
         }
     }
