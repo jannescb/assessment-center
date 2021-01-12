@@ -76,41 +76,45 @@ class SurveyConfig extends CrudConfig
             $form->boolean('active');
         });
         $page->card(function ($form) {
-            $form->block('pages')
-                ->title('Pages')
+            $form->block('questions')
+                ->title('Questions')
                 ->repeatables(function ($repeatables) {
-                    $repeatables->add('Page', function ($form, $preview) {
-                        $form->block('questions')
-                            ->title('Questions')
-                            ->repeatables(function ($repeatables) {
-                                $repeatables->add('Question', function ($form, $preview) {
-                                    $preview->col('{question}');
+                    $repeatables->add('Question', function ($form, $preview) {
+                        $preview->col('{question}');
 
-                                    $form->input('question')
-                                        ->title('Question');
-                                    
-                                    $form->select('question_type')
-                                        ->options([
-                                            'input' => 'Input',
-                                            'radio' => 'Radio',
-                                            'checkbox' => 'Checkbox',
-                                        ])
-                                        ->title('Type');
-
-                                    $form->block('answers')
-                                        ->title('Answers')
-                                        ->repeatables(function ($repeatables) {
-                                            $repeatables->add('Answer', function ($form, $preview) {
-                                                $preview->col('{answer}');
+                        $form->input('question')
+                            ->title('Question')->width(2/3);
                         
-                                                $form->input('answer')
-                                                    ->title('Answer');
-                                            });
-                                        })
-                                        ->when('question_type', 'radio')
-                                        ->orWhen('question_type', 'checkbox');
+                        $form->checkboxes('validate')
+                            ->options([
+                                'email' => 'E-Mail',
+                                'required' => 'Required',
+                            ])
+                            ->title('Validation')->width(1/3);
+
+                        $form->select('question_type')
+                            ->options([
+                                'input' => 'Input',
+                                'radio' => 'Radio',
+                                'checkbox' => 'Checkbox',
+                            ])
+                            ->title('Type');
+
+                        $form->block('answers')
+                            ->title('Answers')
+                            ->repeatables(function ($repeatables) {
+                                $repeatables->add('Answer', function ($form, $preview) {
+                                    $preview->col('{answer}');
+            
+                                    $form->input('answer')
+                                        ->title('Answer');
                                 });
-                            });
+                            })
+                            ->when('question_type', 'radio')
+                            ->orWhen('question_type', 'checkbox');
+                    });
+                    $repeatables->add('Step', function ($form, $preview) {
+                        $preview->col('Next Step');
                     });
                 });
         });

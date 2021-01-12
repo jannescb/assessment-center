@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::get('/surveys/{slug}', [SurveyController::class, 'show']);
+Route::get('/surveys', [SurveyController::class, 'index']);
