@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Survey;
 use Illuminate\Http\Request;
+use App\Exports\SurveyExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -11,9 +13,9 @@ class SurveyController
 {
     public function index()
     {
-        $surveys = Survey::all()->load('results');
+        $survey = Survey::first();
 
-        return $surveys;
+        return Excel::download(new SurveyExport($survey), 'users.xlsx');
     }
 
     public function show($slug)
@@ -30,7 +32,6 @@ class SurveyController
     public function storeResult(Request $request, Survey $survey)
     {
         $survey->load('questions');
-        $rules = [];
 
         $this->validate($request, $survey);
 
@@ -43,7 +44,7 @@ class SurveyController
     {
         foreach ($survey->questions as $question) {
             if ($question->validate) {
-                $rules['id-'.$question->id] = implode('|', $question->validate);
+                $rules["id-$question->id"] = implode('|', $question->validate);
             }
         }
         $validator = Validator::make($request->questions, $rules);

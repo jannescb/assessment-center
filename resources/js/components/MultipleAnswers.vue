@@ -1,25 +1,21 @@
 <template>
-    <question :question="getQuestion()">
-        <pre>{{ question.id }}</pre>
-        <fieldset>
-            <div v-for="(answer, index) in question.answers" :key="index">
-                <input
-                    :type="type"
-                    :id="getId(answer)"
-                    :value="answer.translation.en.answer"
-                    v-model="model"
-                />
-                <label :for="getId(answer)">
-                    {{ getAnswer(answer) }}
-                </label>
-            </div>
-            {{ model }}
-        </fieldset>
-    </question>
+    <fieldset>
+        <div v-for="(answer, index) in question.answers" :key="index">
+            <input
+                :type="type"
+                :id="getId(answer)"
+                :value="getAnswer(answer)"
+                v-model="model"
+            />
+            <label :for="getId(answer)">
+                {{ getAnswer(answer) }}
+            </label>
+        </div>
+        {{ errors }}
+    </fieldset>
 </template>
 
 <script>
-import Question from './Question';
 export default {
     name: 'MultipleAnswers',
     props: {
@@ -27,9 +23,13 @@ export default {
             type: Object,
             required: true,
         },
-    },
-    components: {
-        Question,
+        errors: {
+            type: Array,
+        },
+        getTranslation: {
+            type: Function,
+            required: true,
+        },
     },
     data() {
         return {
@@ -55,13 +55,6 @@ export default {
                 .replace(/\-\-+/g, '-') // Replace multiple - with single -
                 .replace(/^-+/, '') // Trim - from start of text
                 .replace(/-+$/, ''); // Trim - from end of text
-        },
-        getTranslation(obj, key) {
-            let locale = 'en';
-            return obj.translation[locale][key];
-        },
-        getQuestion() {
-            return this.getTranslation(this.question, 'question');
         },
         getAnswer(answer) {
             return this.getTranslation(answer, 'answer');

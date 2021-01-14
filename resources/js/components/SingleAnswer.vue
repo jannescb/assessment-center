@@ -1,11 +1,12 @@
 <template>
-    <question :question="question.translation.en.question">
+    <div>
         <input type="text" v-model="model" />
-    </question>
+
+        {{ errors }}
+    </div>
 </template>
 
 <script>
-import Question from './Question';
 export default {
     name: 'SingleAnswer',
     props: {
@@ -13,9 +14,13 @@ export default {
             type: Object,
             required: true,
         },
-    },
-    components: {
-        Question,
+        getTranslation: {
+            type: Function,
+            required: true,
+        },
+        errors: {
+            type: Array,
+        },
     },
     data() {
         return {
@@ -28,15 +33,6 @@ export default {
                 id: this.question.id,
                 answer: val,
             });
-        },
-    },
-    methods: {
-        getTranslation(obj, key) {
-            let locale = 'en';
-            return obj.translation[locale][key];
-        },
-        getQuestion() {
-            return this.getTranslation(this.question, 'question');
         },
     },
 };

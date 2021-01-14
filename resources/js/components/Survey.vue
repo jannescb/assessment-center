@@ -1,20 +1,26 @@
 <template>
     <div>
-        {{ survey.title }}
-
-        <component
-            :is="getType(question)"
-            :question="question"
-            v-for="(question, index) in survey.questions"
-            :key="index"
-            @input="handleInput"
-        />
-
-        <pre>{{ formData }}</pre>
+        <h1>
+            {{ survey.title }}
+        </h1>
+        <div v-for="(question, index) in survey.questions" :key="index">
+            <h3>
+                {{ getQuestion(question) }}
+            </h3>
+            <component
+                :is="getInputType(question)"
+                :question="question"
+                @input="handleInput"
+                :getTranslation="getTranslation"
+                :errors="getErrors(question)"
+            />
+        </div>
 
         <button @click="submit()">
             Submit
         </button>
+        <pre>{{ formData }}</pre>
+        <pre>{{ errors }}</pre>
     </div>
 </template>
 
@@ -36,6 +42,7 @@ export default {
     data() {
         return {
             formData: this.init(),
+            errors: null,
         };
     },
     methods: {
@@ -48,39 +55,47 @@ export default {
             for (const key in this.survey.questions) {
                 if (Object.hasOwnProperty.call(this.survey.questions, key)) {
                     const element = this.survey.questions[key];
-                    data.questions[`id-${element.id}`] = null;
+                    data.questions[this.makeId(element.id)] = null;
                 }
             }
 
             return data;
         },
-        getType(question) {
-            return (
-                {
-                    checkbox: 'MultipleAnswers',
-                    input: 'SingleAnswer',
-                    radio: 'MultipleAnswers',
-                }[question.question_type] || 'SingleAnswer'
-            );
-        },
-        getComponent(question) {
-            return (
-                {
-                    checkbox: 'MultipleAnswers',
-                    radio: 'MultipleAnswers',
-                }[question.question_type] || 'InputQuestion'
-            );
+        getInputType(question) {
+            return ['checkbox', 'radio', 'select'].includes(
+                question.question_type
+            )
+                ? 'MultipleAnswers'
+                : 'SingleAnswer';
         },
         handleInput(val) {
-            Vue.set(this.formData.questions, `id-${val.id}`, val.answer);
+            Vue.set(this.formData.questions, this.makeId(val.id), val.answer);
+        },
+        getTranslation(obj, key) {
+            let locale = 'en';
+            return obj.translation[locale][key];
+        },
+        getQuestion(question) {
+            return this.getTranslation(question, 'question');
+        },
+        getErrors(question) {
+            if (this.errors?.hasOwnProperty(this.makeId(question.id))) {
+                return this.errors[this.makeId(question.id)];
+            }
+        },
+        makeId(id) {
+            return `id-${id}`;
         },
         async submit() {
+            this.errors = [];
             try {
                 await axios.post(
                     `/api/survey/${this.survey.id}`,
                     this.formData
                 );
-            } catch (error) {}
+            } catch (error) {
+                this.errors = error.response.data.errors;
+            }
         },
     },
 };
