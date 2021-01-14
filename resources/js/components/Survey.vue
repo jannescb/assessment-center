@@ -1,28 +1,40 @@
 <template>
     <div>
+        <h1>
+            {{ survey.title }}
+        </h1>
         <div v-if="participated">
             Danke für deine Teilnahme!
         </div>
         <div v-else>
-            <h1>
-                {{ survey.title }}
-            </h1>
-            <div v-for="(question, index) in survey.questions" :key="index">
-                <h3>
-                    {{ getQuestion(question) }}
-                </h3>
-                <component
-                    :is="getInputType(question)"
-                    :question="question"
-                    @input="handleInput"
-                    :getTranslation="getTranslation"
-                    :errors="getErrors(question)"
-                />
-            </div>
+            <tabs ref="tabs">
+                <tab
+                    :title="index + 1"
+                    v-for="(question, index) in survey.questions"
+                    :hasError="hasErrors(survey.questions)"
+                    :key="index"
+                >
+                    <h3>{{ getQuestion(question) }}</h3>
+                    <component
+                        :is="getInputType(question)"
+                        :question="question"
+                        @input="handleInput"
+                        :getTranslation="getTranslation"
+                        :errors="getErrors(question)"
+                    />
+                    <button @click="submit()" v-if="isLastTab(index)">
+                        Submit
+                    </button>
+                </tab>
+            </tabs>
 
-            <button @click="submit()">
-                Submit
+            <button @click="prev()">
+                prev
             </button>
+            <button @click="next()">
+                next
+            </button>
+            <!-- <pre>{{ formData }}</pre> -->
         </div>
     </div>
 </template>
@@ -30,6 +42,8 @@
 <script>
 import MultipleAnswers from './MultipleAnswers';
 import SingleAnswer from './SingleAnswer';
+import Tabs from './Tabs';
+import Tab from './Tab';
 export default {
     name: 'Survey',
     props: {
@@ -41,6 +55,8 @@ export default {
     components: {
         MultipleAnswers,
         SingleAnswer,
+        Tabs,
+        Tab,
     },
     data() {
         return {
@@ -92,11 +108,29 @@ export default {
                 return this.errors[this.makeId(question.id)];
             }
         },
+        hasErrors(questions) {
+            if (this.errors) {
+                const hasErrors = _.map(questions, question =>
+                    Object.keys(this.errors).includes(this.makeId(question.id))
+                ).includes(true);
+                return hasErrors;
+            }
+            return false;
+        },
         makeId(id) {
             return `id-${id}`;
         },
         makeSurveyId() {
             return `cwl-survey-${this.survey.id}`;
+        },
+        isLastTab(index) {
+            return this.survey.questions.length - 1 == index;
+        },
+        prev() {
+            this.$refs.tabs.prev();
+        },
+        next() {
+            this.$refs.tabs.next();
         },
         async submit() {
             this.errors = [];

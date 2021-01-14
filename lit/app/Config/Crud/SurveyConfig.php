@@ -74,11 +74,12 @@ class SurveyConfig extends CrudConfig
         $page->headerRight()->action('Exportieren', ExportSurveyAction::class);
 
         $page->card(function ($form) {
-            $form->input('title');
-            $form->input('email');
-            $form->input('subject');
-            $form->boolean('active');
-        });
+            $form->input('title')->width(10);
+            $form->boolean('active')->width(2);
+            $form->input('email')->width(5);
+            $form->input('subject')->width(7);
+        })->width(8);
+        
         $page->card(function ($form) {
             $form->block('questions')
                 ->title('Questions')
@@ -87,23 +88,25 @@ class SurveyConfig extends CrudConfig
                         $preview->col('{question}');
 
                         $form->input('question')
-                            ->title('Question')->width(2/3);
-                        
-                        $form->checkboxes('validate')
-                            ->options([
-                                'email' => 'E-Mail',
-                                'required' => 'Required',
-                            ])
-                            ->title('Validation')->width(1/3);
+                            ->title('Question');
 
                         $form->select('question_type')
                             ->options([
                                 'input' => 'Input',
                                 'radio' => 'Radio',
                                 'checkbox' => 'Checkbox',
+                                'select' => 'Select',
                             ])
-                            ->title('Type');
-
+                            ->title('Type')->width(6);
+                        
+                        $form->checkboxes('validate')
+                            ->options([
+                                'email' => 'E-Mail',
+                                'required' => 'Required',
+                            ])
+                            ->title('Validation')->width(6);
+                        
+                        
                         $form->block('answers')
                             ->title('Answers')
                             ->repeatables(function ($repeatables) {
@@ -115,53 +118,10 @@ class SurveyConfig extends CrudConfig
                                 });
                             })
                             ->when('question_type', 'radio')
+                            ->orWhen('question_type', 'select')
                             ->orWhen('question_type', 'checkbox');
                     });
-                    $repeatables->add('Step', function ($form, $preview) {
-                        $preview->col('Next Step');
-                    });
                 });
-        });
-
-        // $page->card(function ($form) {
-        //     $form->block('steps')
-        //         ->title('Stufen')
-        //         ->repeatables(function ($repeatables) {
-        //             $repeatables->add('Stufe hinzufügen', function ($form, $preview) {
-        //                 $form->manyRelation('questions')
-        //                     ->title('Fragen')
-        //                     ->model(SurveyQuestion::class)
-        //                     ->preview(function ($table) {
-        //                         $table->col('Frage')->value('{question}');
-        //                     })
-        //                     ->sortable();
-        //             });
-        //         });
-        // });
-        
-        // $page->card(function ($form) {
-        //     $form->relation('surveyQuestions')
-        //         ->createAndUpdateForm(function ($form) {
-        //             $form->input('question')
-        //                 ->title('Question')->width(2/3);
-        //             $form->checkboxes('validate')
-        //                 ->options([
-        //                     'email' => 'E-Mail',
-        //                     'required' => 'Required',
-        //                 ])
-        //                 ->title('Validation')->width(1/3);
-        //             $form->select('type')
-        //                 ->options([
-        //                     'input' => 'Input',
-        //                     'radio' => 'Radio',
-        //                     'checkbox' => 'Checkbox',
-        //                 ])
-        //                 ->title('Type');
-        //         })
-        //         ->preview(function ($table) {
-        //             $table->col('Frage')->value('{question}');
-        //         });
-        //     ;
-        // });
+        })->width(12);
     }
 }

@@ -1,6 +1,14 @@
 <template>
-    <fieldset>
-        <div v-for="(answer, index) in question.answers" :key="index">
+    <div>
+        <select v-if="type == 'select'" v-model="model">
+            <option
+                :value="getAnswer(answer)"
+                v-for="(answer, index) in question.answers"
+                :key="index"
+                >{{ getAnswer(answer) }}</option
+            >
+        </select>
+        <div v-else v-for="(answer, index) in question.answers" :key="index">
             <input
                 :type="type"
                 :id="getId(answer)"
@@ -12,7 +20,7 @@
             </label>
         </div>
         {{ errors }}
-    </fieldset>
+    </div>
 </template>
 
 <script>

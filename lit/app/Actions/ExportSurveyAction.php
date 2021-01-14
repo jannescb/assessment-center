@@ -7,6 +7,7 @@ use App\Exports\SurveyExport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class ExportSurveyAction
 {
@@ -20,8 +21,8 @@ class ExportSurveyAction
     {
         $survey = $models->first();
 
-        $filename = $survey->translations[0]->slug ?? 'survey';
+        $filename = ($survey->translations[0]->slug ?? 'survey') . '.xlsx';
 
-        return Excel::download(new SurveyExport($survey), "$filename.xlsx");
+        Excel::store(new SurveyExport($survey), $filename);
     }
 }

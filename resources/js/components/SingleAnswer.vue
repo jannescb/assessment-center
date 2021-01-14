@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input type="text" v-model="model" />
+        <input type="text" v-model="model" class="border border-gray-700 " />
 
         {{ errors }}
     </div>

@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const tailwindcss = require('tailwindcss');
 
 /*
  |--------------------------------------------------------------------------
@@ -17,4 +18,8 @@ mix.js('resources/js/app.js', 'public/js')
     .browserSync({
         proxy: 'assessment-center.test',
         notify: false,
+    })
+    .options({
+        processCssUrls: false,
+        postCss: [tailwindcss('./tailwind.config.js')],
     });
