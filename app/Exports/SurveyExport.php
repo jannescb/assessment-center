@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Survey;
+use Ignite\Crud\Models\Repeatable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
@@ -12,7 +13,7 @@ class SurveyExport implements FromCollection, WithHeadings
 
     public function __construct(Survey $survey)
     {
-        $this->results = $survey->results->pluck('results');
+        $this->results = $survey->results()->pluck('results');
     }
 
     /**
@@ -30,6 +31,12 @@ class SurveyExport implements FromCollection, WithHeadings
      */
     public function headings(): array
     {
-        return collect($this->results->first())->keys()->all();
+        $keys = collect($this->results->first())->keys()->all();
+        
+        $headings = collect($keys)->map(function ($key) {
+            return Repeatable::find(explode('-', $key)[1])->question;
+        });
+
+        return $headings->toArray();
     }
 }

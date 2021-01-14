@@ -33,11 +33,11 @@ class Survey extends Model implements TranslatableContract
     protected $with = ['translations'];
     
     /**
-     * The attributes that should be casted.
+     * The attributes that should be cast.
      *
      * @var array
      */
-    protected $casted = ['active' => 'boolean'];
+    protected $casts = ['active' => 'boolean'];
 
     /**
      * A Survey has many SurveyResults.
@@ -52,9 +52,5 @@ class Survey extends Model implements TranslatableContract
     public function questions()
     {
         return $this->repeatables('questions');
-    }
-    public function pages()
-    {
-        return $this->repeatables('pages');
     }
 }

@@ -11,19 +11,12 @@ use Illuminate\Validation\ValidationException;
 
 class SurveyController
 {
-    public function index()
-    {
-        $survey = Survey::first();
-
-        return Excel::download(new SurveyExport($survey), 'users.xlsx');
-    }
-
     public function show($slug)
     {
         $survey = Survey::whereHas('translation', function ($query) use ($slug) {
             $query->where('slug', $slug);
         })->with('questions')->first();
-
+        
         return view('surveys.show')->with([
             'survey' => $survey
         ]);

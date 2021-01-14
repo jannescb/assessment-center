@@ -2024,6 +2024,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2041,8 +2044,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       formData: this.init(),
-      errors: null
+      errors: null,
+      participated: false
     };
+  },
+  beforeMount: function beforeMount() {
+    if (localStorage.getItem(this.makeSurveyId())) {
+      this.participated = true;
+    }
   },
   methods: {
     init: function init() {
@@ -2083,6 +2092,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     makeId: function makeId(id) {
       return "id-".concat(id);
     },
+    makeSurveyId: function makeSurveyId() {
+      return "cwl-survey-".concat(this.survey.id);
+    },
     submit: function submit() {
       var _this = this;
 
@@ -2097,20 +2109,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.post("/api/survey/".concat(_this.survey.id), _this.formData);
 
               case 4:
-                _context.next = 9;
+                _this.participated = true;
+                localStorage.setItem(_this.makeSurveyId(), true);
+                _context.next = 11;
                 break;
 
-              case 6:
-                _context.prev = 6;
+              case 8:
+                _context.prev = 8;
                 _context.t0 = _context["catch"](1);
                 _this.errors = _context.t0.response.data.errors;
 
-              case 9:
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 6]]);
+        }, _callee, null, [[1, 8]]);
       }))();
     }
   }
@@ -38668,56 +38682,58 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("h1", [_vm._v("\n        " + _vm._s(_vm.survey.title) + "\n    ")]),
-      _vm._v(" "),
-      _vm._l(_vm.survey.questions, function(question, index) {
-        return _c(
+  return _c("div", [
+    _vm.participated
+      ? _c("div", [_vm._v("\n        Danke für deine Teilnahme!\n    ")])
+      : _c(
           "div",
-          { key: index },
           [
-            _c("h3", [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.getQuestion(question)) +
-                  "\n        "
-              )
+            _c("h1", [
+              _vm._v("\n            " + _vm._s(_vm.survey.title) + "\n        ")
             ]),
             _vm._v(" "),
-            _c(_vm.getInputType(question), {
-              tag: "component",
-              attrs: {
-                question: question,
-                getTranslation: _vm.getTranslation,
-                errors: _vm.getErrors(question)
+            _vm._l(_vm.survey.questions, function(question, index) {
+              return _c(
+                "div",
+                { key: index },
+                [
+                  _c("h3", [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.getQuestion(question)) +
+                        "\n            "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(_vm.getInputType(question), {
+                    tag: "component",
+                    attrs: {
+                      question: question,
+                      getTranslation: _vm.getTranslation,
+                      errors: _vm.getErrors(question)
+                    },
+                    on: { input: _vm.handleInput }
+                  })
+                ],
+                1
+              )
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.submit()
+                  }
+                }
               },
-              on: { input: _vm.handleInput }
-            })
+              [_vm._v("\n            Submit\n        ")]
+            )
           ],
-          1
+          2
         )
-      }),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          on: {
-            click: function($event) {
-              return _vm.submit()
-            }
-          }
-        },
-        [_vm._v("\n        Submit\n    ")]
-      ),
-      _vm._v(" "),
-      _c("pre", [_vm._v(_vm._s(_vm.formData))]),
-      _vm._v(" "),
-      _c("pre", [_vm._v(_vm._s(_vm.errors))])
-    ],
-    2
-  )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -3,9 +3,11 @@
 namespace Lit\Config\Crud;
 
 use App\Models\Survey;
+use App\Models\SurveyQuestion;
 use Ignite\Crud\Config\CrudConfig;
 use Ignite\Crud\CrudIndex;
 use Ignite\Crud\CrudShow;
+use Lit\Actions\ExportSurveyAction;
 use Lit\Http\Controllers\Crud\SurveyController;
 
 class SurveyConfig extends CrudConfig
@@ -69,6 +71,8 @@ class SurveyConfig extends CrudConfig
      */
     public function show(CrudShow $page)
     {
+        $page->headerRight()->action('Exportieren', ExportSurveyAction::class);
+
         $page->card(function ($form) {
             $form->input('title');
             $form->input('email');
@@ -118,5 +122,46 @@ class SurveyConfig extends CrudConfig
                     });
                 });
         });
+
+        // $page->card(function ($form) {
+        //     $form->block('steps')
+        //         ->title('Stufen')
+        //         ->repeatables(function ($repeatables) {
+        //             $repeatables->add('Stufe hinzufügen', function ($form, $preview) {
+        //                 $form->manyRelation('questions')
+        //                     ->title('Fragen')
+        //                     ->model(SurveyQuestion::class)
+        //                     ->preview(function ($table) {
+        //                         $table->col('Frage')->value('{question}');
+        //                     })
+        //                     ->sortable();
+        //             });
+        //         });
+        // });
+        
+        // $page->card(function ($form) {
+        //     $form->relation('surveyQuestions')
+        //         ->createAndUpdateForm(function ($form) {
+        //             $form->input('question')
+        //                 ->title('Question')->width(2/3);
+        //             $form->checkboxes('validate')
+        //                 ->options([
+        //                     'email' => 'E-Mail',
+        //                     'required' => 'Required',
+        //                 ])
+        //                 ->title('Validation')->width(1/3);
+        //             $form->select('type')
+        //                 ->options([
+        //                     'input' => 'Input',
+        //                     'radio' => 'Radio',
+        //                     'checkbox' => 'Checkbox',
+        //                 ])
+        //                 ->title('Type');
+        //         })
+        //         ->preview(function ($table) {
+        //             $table->col('Frage')->value('{question}');
+        //         });
+        //     ;
+        // });
     }
 }

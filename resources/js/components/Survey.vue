@@ -1,26 +1,29 @@
 <template>
     <div>
-        <h1>
-            {{ survey.title }}
-        </h1>
-        <div v-for="(question, index) in survey.questions" :key="index">
-            <h3>
-                {{ getQuestion(question) }}
-            </h3>
-            <component
-                :is="getInputType(question)"
-                :question="question"
-                @input="handleInput"
-                :getTranslation="getTranslation"
-                :errors="getErrors(question)"
-            />
+        <div v-if="participated">
+            Danke für deine Teilnahme!
         </div>
+        <div v-else>
+            <h1>
+                {{ survey.title }}
+            </h1>
+            <div v-for="(question, index) in survey.questions" :key="index">
+                <h3>
+                    {{ getQuestion(question) }}
+                </h3>
+                <component
+                    :is="getInputType(question)"
+                    :question="question"
+                    @input="handleInput"
+                    :getTranslation="getTranslation"
+                    :errors="getErrors(question)"
+                />
+            </div>
 
-        <button @click="submit()">
-            Submit
-        </button>
-        <pre>{{ formData }}</pre>
-        <pre>{{ errors }}</pre>
+            <button @click="submit()">
+                Submit
+            </button>
+        </div>
     </div>
 </template>
 
@@ -43,7 +46,13 @@ export default {
         return {
             formData: this.init(),
             errors: null,
+            participated: false,
         };
+    },
+    beforeMount() {
+        if (localStorage.getItem(this.makeSurveyId())) {
+            this.participated = true;
+        }
     },
     methods: {
         init() {
@@ -86,6 +95,9 @@ export default {
         makeId(id) {
             return `id-${id}`;
         },
+        makeSurveyId() {
+            return `cwl-survey-${this.survey.id}`;
+        },
         async submit() {
             this.errors = [];
             try {
@@ -93,6 +105,8 @@ export default {
                     `/api/survey/${this.survey.id}`,
                     this.formData
                 );
+                this.participated = true;
+                localStorage.setItem(this.makeSurveyId(), true);
             } catch (error) {
                 this.errors = error.response.data.errors;
             }
