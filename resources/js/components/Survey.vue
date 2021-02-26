@@ -1,5 +1,6 @@
 <template>
     <div>
+        <pre>{{ survey }}</pre>
         <h1>
             {{ survey.title }}
         </h1>
@@ -10,31 +11,38 @@
             <tabs ref="tabs">
                 <tab
                     :title="index + 1"
-                    v-for="(question, index) in survey.questions"
-                    :hasError="hasErrors(survey.questions)"
+                    v-for="(step, index) in survey.steps"
+                    :hasError="hasErrors(step)"
                     :key="index"
                 >
-                    <h3>{{ getQuestion(question) }}</h3>
-                    <component
-                        :is="getInputType(question)"
-                        :question="question"
-                        @input="handleInput"
-                        :getTranslation="getTranslation"
-                        :errors="getErrors(question)"
-                    />
-                    <button @click="submit()" v-if="isLastTab(index)">
+                    <div v-for="(question, index) in step" :key="index">
+                        <h3>{{ question.question }}</h3>
+
+                        <div class="pb-6">
+                            <component
+                                :is="getInputType(question)"
+                                :question="question"
+                                @input="handleInput"
+                                :errors="getErrors(question)"
+                            />
+                        </div>
+                    </div>
+                    <button
+                        @click="submit()"
+                        v-if="isLastTab(index)"
+                        class="btn"
+                    >
                         Submit
                     </button>
                 </tab>
             </tabs>
 
-            <button @click="prev()">
+            <button @click="prev()" class="btn">
                 prev
             </button>
-            <button @click="next()">
+            <button @click="next()" class="btn">
                 next
             </button>
-            <!-- <pre>{{ formData }}</pre> -->
         </div>
     </div>
 </template>
@@ -77,9 +85,11 @@ export default {
                 questions: {},
             };
 
-            for (const key in this.survey.questions) {
-                if (Object.hasOwnProperty.call(this.survey.questions, key)) {
-                    const element = this.survey.questions[key];
+            let questions = _.flatten(this.survey.steps);
+
+            for (const key in questions) {
+                if (Object.hasOwnProperty.call(questions, key)) {
+                    const element = questions[key];
                     data.questions[this.makeId(element.id)] = null;
                 }
             }
@@ -87,21 +97,12 @@ export default {
             return data;
         },
         getInputType(question) {
-            return ['checkbox', 'radio', 'select'].includes(
-                question.question_type
-            )
+            return ['checkbox', 'radio', 'select'].includes(question.type)
                 ? 'MultipleAnswers'
                 : 'SingleAnswer';
         },
         handleInput(val) {
             Vue.set(this.formData.questions, this.makeId(val.id), val.answer);
-        },
-        getTranslation(obj, key) {
-            let locale = 'en';
-            return obj.translation[locale][key];
-        },
-        getQuestion(question) {
-            return this.getTranslation(question, 'question');
         },
         getErrors(question) {
             if (this.errors?.hasOwnProperty(this.makeId(question.id))) {
@@ -124,7 +125,7 @@ export default {
             return `cwl-survey-${this.survey.id}`;
         },
         isLastTab(index) {
-            return this.survey.questions.length - 1 == index;
+            return this.survey.steps.length - 1 == index;
         },
         prev() {
             this.$refs.tabs.prev();
@@ -148,3 +149,9 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" scoped>
+.btn {
+    @apply px-4 py-2 bg-indigo-300 rounded-full;
+}
+</style>

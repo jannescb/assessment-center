@@ -49,8 +49,12 @@ class Survey extends Model implements TranslatableContract
         return $this->hasMany(SurveyResult::class);
     }
 
-    public function questions()
+    // public function questions()
+    // {
+    //     return $this->repeatables('questions');
+    // }
+    public function steps()
     {
-        return $this->repeatables('questions');
+        return $this->repeatables('steps');
     }
 }

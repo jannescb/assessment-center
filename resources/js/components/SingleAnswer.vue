@@ -14,10 +14,6 @@ export default {
             type: Object,
             required: true,
         },
-        getTranslation: {
-            type: Function,
-            required: true,
-        },
         errors: {
             type: Array,
         },

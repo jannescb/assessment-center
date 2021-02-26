@@ -3,7 +3,6 @@
 namespace Lit\Config\Crud;
 
 use App\Models\Survey;
-use App\Models\SurveyQuestion;
 use Ignite\Crud\Config\CrudConfig;
 use Ignite\Crud\CrudIndex;
 use Ignite\Crud\CrudShow;
@@ -35,8 +34,8 @@ class SurveyConfig extends CrudConfig
     public function names(Survey $survey = null)
     {
         return [
-            'singular' => 'Survey',
-            'plural'   => 'Surveys',
+            'singular' => 'Umfrage',
+            'plural'   => 'Umfragen',
         ];
     }
 
@@ -71,57 +70,74 @@ class SurveyConfig extends CrudConfig
      */
     public function show(CrudShow $page)
     {
-        $page->headerRight()->action('Exportieren', ExportSurveyAction::class);
+        $page->navigationControls()->action('Exportieren', ExportSurveyAction::class);
+        
+        if ($this->getModelInstance()) {
+            $page->preview(function ($model) {
+                return route('surveys.show', [
+                    'id' => $this->getModelInstance()->id
+                ]);
+            });
+        }
 
+        $page->info('Allgemein')
+            ->text('Geben Sie die allgemeinen Informationen zur Umfrage. ')
+            ->width(4);
         $page->card(function ($form) {
-            $form->input('title')->width(10);
-            $form->boolean('active')->width(2);
-            $form->input('email')->width(5);
-            $form->input('subject')->width(7);
+            $form->input('title')->width(10)->title('Name der Umfrage');
+            $form->boolean('active')->width(2)->title('aktiv');
+            $form->input('email')->width(6)->title('E-Mail')->hint('An wen sollen Umfrageergebnisse geschickt werden?');
+            $form->input('subject')->width(6)->title('Betreff')->hint('Betreff für die E-Mail');
         })->width(8);
+
+        $page->info('Fragen')
+            ->text('Erstellen Sie hier die mehrstufige Umfrage. Jede Stufe kann beliebig viele Fragen enthalten')
+            ->width(4);
         
         $page->card(function ($form) {
-            $form->block('questions')
-                ->title('Questions')
+            $form->block('steps')
+                ->title('Stufen')
                 ->repeatables(function ($repeatables) {
-                    $repeatables->add('Question', function ($form, $preview) {
-                        $preview->col('{question}');
-
-                        $form->input('question')
-                            ->title('Question');
-
-                        $form->select('question_type')
-                            ->options([
-                                'input' => 'Input',
-                                'radio' => 'Radio',
-                                'checkbox' => 'Checkbox',
-                                'select' => 'Select',
-                            ])
-                            ->title('Type')->width(6);
-                        
-                        $form->checkboxes('validate')
-                            ->options([
-                                'email' => 'E-Mail',
-                                'required' => 'Required',
-                            ])
-                            ->title('Validation')->width(6);
-                        
-                        
-                        $form->block('answers')
-                            ->title('Answers')
+                    $repeatables->add('step', function ($form, $preview) {
+                        $preview->col('Stufe');
+                        $form->block('questions')
+                            ->title('Fragen')
                             ->repeatables(function ($repeatables) {
-                                $repeatables->add('Answer', function ($form, $preview) {
-                                    $preview->col('{answer}');
-            
-                                    $form->input('answer')
-                                        ->title('Answer');
-                                });
-                            })
-                            ->when('question_type', 'radio')
-                            ->orWhen('question_type', 'select')
-                            ->orWhen('question_type', 'checkbox');
-                    });
+                                $repeatables->add('question', function ($form, $preview) {
+                                    $preview->col('{question}');
+
+                                    $form->input('question')
+                                        ->title('Frage');
+
+                                    $form->select('question_type')
+                                        ->options([
+                                            'input' => 'Input',
+                                            'radio' => 'Radio',
+                                            'checkbox' => 'Checkbox',
+                                            'select' => 'Select',
+                                        ])
+                                        ->title('Type')->width(6);
+                                    
+                                    $form->checkboxes('validate')
+                                        ->options([
+                                            'email' => 'E-Mail',
+                                            'required' => 'Pflichtfeld',
+                                        ])
+                                        ->title('Validierung')->width(6);
+                                    
+                                    
+                                    $form->listing('answers', function ($form) {
+                                        $form->input('answer');
+                                    })
+                                        ->title('Antworten')
+                                        ->when('question_type', 'radio')
+                                        ->orWhen('question_type', 'select')
+                                        ->orWhen('question_type', 'checkbox');
+                                })->button('Frage hinzufügen');
+                            });
+                    })->button('Stufe hinzufügen');
+                    ;
                 });
-        })->width(12);
+        })->width(8);
     }
 }

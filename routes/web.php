@@ -18,5 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/surveys/{slug}', [SurveyController::class, 'show']);
+Route::get('/surveys/{id}', [SurveyController::class, 'show'])->name('surveys.show');
 Route::get('/surveys', [SurveyController::class, 'index']);

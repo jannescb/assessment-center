@@ -15,7 +15,7 @@ class CreateSurveysTables extends Migration
     {
         Schema::create('surveys', function (Blueprint $table) {
             $table->id();
-            $table->boolean('active');
+            $table->boolean('active')->default(false);
             $table->string('email')->nullable();
             $table->timestamps();
         });

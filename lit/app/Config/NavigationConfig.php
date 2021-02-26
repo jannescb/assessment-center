@@ -39,7 +39,7 @@ class NavigationConfig extends Config
         $nav->section([
             $nav->title('Models'),
 
-            $nav->preset(SurveyConfig::class)->icon(fa('poll-alt'))
+            $nav->preset(SurveyConfig::class)->icon(fa('poll'))
         ]);
     }
 }

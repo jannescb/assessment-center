@@ -5,8 +5,10 @@
                 class="inline-flex items-center justify-center w-8 h-8 rounded-full"
                 :class="{
                     'bg-gray-200': !tab.hasError,
-                    'border border-red-300': tab.hasError,
-                    'bg-gray-500 text-white': selectedIndex == index,
+                    'bg-gray-500 text-white':
+                        selectedIndex == index && !tab.hasError,
+                    'bg-red-300': tab.hasError,
+                    'bg-red-500': selectedIndex == index && tab.hasError,
                 }"
                 v-for="(tab, index) in tabs"
                 :key="tab.title"

@@ -2,21 +2,21 @@
     <div>
         <select v-if="type == 'select'" v-model="model">
             <option
-                :value="getAnswer(answer)"
+                :value="answer"
                 v-for="(answer, index) in question.answers"
                 :key="index"
-                >{{ getAnswer(answer) }}</option
+                >{{ answer }}</option
             >
         </select>
         <div v-else v-for="(answer, index) in question.answers" :key="index">
             <input
                 :type="type"
-                :id="getId(answer)"
-                :value="getAnswer(answer)"
+                :id="getId(answer.answer)"
+                :value="answer.answer"
                 v-model="model"
             />
-            <label :for="getId(answer)">
-                {{ getAnswer(answer) }}
+            <label :for="getId(answer.answer)">
+                {{ answer.answer }}
             </label>
         </div>
         {{ errors }}
@@ -33,10 +33,6 @@ export default {
         },
         errors: {
             type: Array,
-        },
-        getTranslation: {
-            type: Function,
-            required: true,
         },
     },
     data() {
@@ -64,16 +60,16 @@ export default {
                 .replace(/^-+/, '') // Trim - from start of text
                 .replace(/-+$/, ''); // Trim - from end of text
         },
-        getAnswer(answer) {
-            return this.getTranslation(answer, 'answer');
-        },
         getId(answer) {
-            return this.slugify(this.getAnswer(answer));
+            return this.slugify(answer);
         },
     },
     computed: {
         type() {
-            return this.question.question_type;
+            return this.question.type;
+        },
+        answers() {
+            return this.question.fields;
         },
     },
 };
