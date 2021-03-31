@@ -1,11 +1,11 @@
 <template>
     <div>
-        <ul class="flex justify-around my-6">
+        <ul class="flex my-6">
             <li
-                class="inline-flex items-center justify-center w-8 h-8 rounded-full"
+                class="inline-flex items-center justify-center w-full h-1 mr-2 cursor-pointer"
                 :class="{
                     'bg-gray-200': !tab.hasError,
-                    'bg-gray-500 text-white':
+                    'bg-blue-500 text-white':
                         selectedIndex == index && !tab.hasError,
                     'bg-red-300': tab.hasError,
                     'bg-red-500': selectedIndex == index && tab.hasError,
@@ -13,9 +13,7 @@
                 v-for="(tab, index) in tabs"
                 :key="tab.title"
                 @click="selectTab(index)"
-            >
-                {{ tab.title }}
-            </li>
+            ></li>
         </ul>
         <slot></slot>
     </div>
@@ -58,6 +56,8 @@ export default {
             this.tabs.forEach((tab, index) => {
                 tab.isActive = index === i;
             });
+
+            this.$emit('selected', i);
         },
         prev() {
             this.selectTab(this.selectedIndex - 1);

@@ -2327,12 +2327,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/litstack/litstack.git",
-                "reference": "c576a9152e169d9c5770b3b40a952c1b5553dc6c"
+                "reference": "a489d0af3bbaa098826a55fb48ed1e1af68518a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/litstack/litstack/zipball/c576a9152e169d9c5770b3b40a952c1b5553dc6c",
-                "reference": "c576a9152e169d9c5770b3b40a952c1b5553dc6c",
+                "url": "https://api.github.com/repos/litstack/litstack/zipball/a489d0af3bbaa098826a55fb48ed1e1af68518a6",
+                "reference": "a489d0af3bbaa098826a55fb48ed1e1af68518a6",
                 "shasum": ""
             },
             "require": {
@@ -2395,7 +2395,7 @@
                 "issues": "https://github.com/litstack/litstack/issues",
                 "source": "https://github.com/litstack/litstack/tree/3.x"
             },
-            "time": "2021-01-11T18:43:24+00:00"
+            "time": "2021-03-29T09:29:52+00:00"
         },
         {
             "name": "livewire/livewire",

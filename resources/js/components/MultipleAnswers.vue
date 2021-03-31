@@ -19,13 +19,17 @@
                 {{ answer.answer }}
             </label>
         </div>
-        {{ errors }}
+        <errors :errors="errors" />
     </div>
 </template>
 
 <script>
+import Errors from './Errors';
 export default {
     name: 'MultipleAnswers',
+    components: {
+        Errors,
+    },
     props: {
         question: {
             type: Object,

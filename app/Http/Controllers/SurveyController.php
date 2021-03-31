@@ -15,13 +15,15 @@ class SurveyController
 
         $data = collect([
             'id' => $survey->id,
+            'title' => $survey->title,
             'steps' => $survey->steps->map(function ($step) {
                 return $step->questions->map(function ($question) {
                     return [
                         'id' => $question->id,
                         'question' => $question->question,
                         'type' => $question->question_type,
-                        'answers' => $question->answers
+                        'answers' => $question->answers,
+                        'validate' => $question->validate,
                     ];
                 });
             })

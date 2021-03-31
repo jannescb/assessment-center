@@ -10,8 +10,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 </head>
-<body>
-    <div id="app" class="container mx-auto">
+<body class="bg-gray-50">
+    <div id="app" class="container relative z-10 mx-auto ">
         @yield('content')
     </div>
     <script src="/js/app.js"></script>
